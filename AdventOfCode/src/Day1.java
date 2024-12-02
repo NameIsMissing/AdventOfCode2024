@@ -8,18 +8,19 @@ public class Day1 {
     private static ArrayList<Integer> numberList1;
     private static ArrayList<Integer> numberList2;
 
-    public static void day1() {
+    public static void getDay1Solution() {
         initializeArrays();
         sort(numberList1);
-        sort(numberList2);
+        sort(numberList2); // Initialize and sort the arrays from input data
         int sumOfDifference = 0;
         for (int i = 0; i < numberList1.size(); i++) {
             int difference = Math.abs(numberList1.get(i) - numberList2.get(i));
             sumOfDifference += difference;
         }
-        System.out.println(sumOfDifference);
+        System.out.println("Day 1 Solution: " + sumOfDifference);
     }
 
+    // Perform a bubble sort on the list to sort it in increasing order (slow but simple to understand)
     public static void sort(ArrayList<Integer> numList) {
         for (int maxElement = numList.size() - 1; maxElement > 0; maxElement--) {
             for (int i = 0; i < maxElement; i++) {
@@ -32,6 +33,7 @@ public class Day1 {
         }
     }
 
+    // Creates 2 lists of integers, one of which holds the first value on every line, the other holds the 2nd value on every line
     public static void initializeArrays() {
         try {
             File day1Input = new File("src/Inputs/Day1Input.txt");
