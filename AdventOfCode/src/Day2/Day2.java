@@ -10,38 +10,35 @@ public class Day2 {
 
     private static ArrayList<ArrayList<Integer>> reports;
 
-    /*
+    // To see what problem we are actually trying to solve, visit the link to the puzzle above.
     public static void main(String[] args) {
-        getDay2Solution();
-    }*/
-
-    public static void getDay2Solution() {
         initializeArrays();
 
         // Part 1
         int numValidReports = 0;
         for (ArrayList<Integer> report : reports) {
-            boolean valid = isValidReport(report, false);
-            if (valid) {
+            if (isValidReport(report, false)) {
                 numValidReports++;
             }
         }
-        System.out.println("Day 2 Part 1 Solution: " + numValidReports);
+        System.out.println("Part 1 Solution: " + numValidReports);
 
         // Part 2
         numValidReports = 0;
         for (ArrayList<Integer> report : reports) {
-            boolean valid = isValidReport(report, true);
-            if (valid) {
+            if (isValidReport(report, true)) {
                 numValidReports++;
             }
         }
-        System.out.println("Day 2 Part 2 Solution: " + numValidReports);
+        System.out.println("Part 2 Solution: " + numValidReports);
     }
 
-    // If dampened, a report is also valid if one element can be removed to make it valid normally.
-    // While inefficient, this algorithm will try removing every single element and testing it to see if it's valid.
-    public static boolean isValidDampened(ArrayList<Integer> report) {
+    /*
+        If dampened, a report can also be valid if any one of its elements can be removed and the array would
+        now be valid without that singular element. This method will create a copy of the report and remove
+        every element from the report until it finds one that is valid without it, or runs out of items to remove.
+     */
+    private static boolean isValidDampened(ArrayList<Integer> report) {
         for (int i = 0; i < report.size(); i++) {
             ArrayList<Integer> reportCopy = (ArrayList<Integer>) report.clone();
             reportCopy.remove(i);
@@ -53,11 +50,12 @@ public class Day2 {
     }
 
     /*
-        A report is valid when the numbers in the list are steadily increasing/decreasing
-        with no elements equal to each other. Each element in the list also must be +- 3
-        from the element before and after it.
+        A report is valid if there are no two elements that are the same, the report is in either increasing
+        or decreasing order, and the gap between two consecutive elements in the report is no greater than 3
+        (This means that the gap will need to be between 1 and 3)
      */
-    public static boolean isValidReport(ArrayList<Integer> report, boolean dampen) {
+    private static boolean isValidReport(ArrayList<Integer> report, boolean dampen) {
+        // If dampen is enabled, we will enter another special method for dampened reports.
         if (dampen) {
             return isValidDampened(report);
         }
@@ -89,19 +87,22 @@ public class Day2 {
         return false;
     }
 
-    // Initialize the lists with data from input file
-    public static void initializeArrays() {
+    // Fill the reports list with lists of the numbers on each line of the input.
+    private static void initializeArrays() {
         try {
-            File day1Input = new File("src/Day2/Day2Input.txt");
-            Scanner fileScanner = new Scanner(day1Input);
+            File input = new File("src/Day2/Day2Input.txt");
+            Scanner fileScanner = new Scanner(input);
             reports = new ArrayList<ArrayList<Integer>>(1000);
 
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 ArrayList<Integer> report = new ArrayList<Integer>();
-                String[] reportNums = line.split(" ");
 
-                for (String num : reportNums) {
+                /*
+                    line.split(" ") will return an array of strings (the numbers on each line) that we look
+                    through and parse an int from the string which will be added to the report.
+                 */
+                for (String num : line.split(" ")) {
                     report.add(Integer.parseInt(num));
                 }
                 reports.add(report);
