@@ -5,11 +5,14 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// PART 1
+// Link to puzzle: https://adventofcode.com/2024/day/3
 public class Day3P1 {
 
     private static ArrayList<String> corruptedData;
     private static ArrayList<Integer> mulIndexes;
 
+    // To see what problem we are actually trying to solve, visit the link to the puzzle above.
     public static void main(String[] args) {
         initializeArrays();
 
@@ -20,13 +23,26 @@ public class Day3P1 {
         System.out.println(sumOfProducts);
     }
 
+    /*
+        Determines if the mul function found at index is actually valid or not. A function can be invalid if it is
+        not in the form "mul(x,y)".
+     */
     private static int isValidMul(int index) {
         String line = corruptedData.get(mulIndexes.get(index + 1));
         line = line.substring(mulIndexes.get(index));
         line = line.substring(0, line.indexOf(")") + 1);
+        /*
+            The line is now "mul" until the next occurance of ")". If this does not contain any of the following
+            characters then it is an invalid function
+         */
         if (!line.contains("(") || !line.contains(",") || !line.contains(")")) {
             return 0;
         }
+        /*
+            We will try to extract the numbers from the function string "mul(42,42)". If the code below causes an
+            error due to it not being able to extract a number (EX. "mul(20!w,534@!)"). The function is invalid
+            and will return a zero to not add anything to the sum.
+         */
         try {
             int num1 = Integer.parseInt(line.substring(4, line.indexOf(",")));
             int num2 = Integer.parseInt(line.substring(line.indexOf(",") + 1, line.indexOf(")")));
@@ -40,13 +56,19 @@ public class Day3P1 {
         try {
             File input = new File("src/Day3/Day3Input.txt");
             Scanner fileScanner = new Scanner(input);
-            mulIndexes = new ArrayList<Integer>();
-            corruptedData = new ArrayList<String>();
+            mulIndexes = new ArrayList<Integer>();  // The index that the word "mul" has been found at and the line
+                                                    // of corrupted data it's on in the following element of the list
+            corruptedData = new ArrayList<String>(); // The lines of corrupted data
 
             int lineNumber = 0;
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 corruptedData.add(line);
+                /*
+                    The following code will check each index of the line to see if it starts with "mul". If it does
+                    the code will add the index it was found at, and then the line number it was found on to the
+                    mulIndexes list.
+                 */
                 for (int i = 0; i < line.length() - 3; i++) {
                     if (line.startsWith("mul", i)) {
                         mulIndexes.add(i);
